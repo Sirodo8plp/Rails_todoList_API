@@ -1,0 +1,216 @@
+---
+swagger: '2.0'
+info:
+  title: API V1
+  version: v1
+paths:
+  "/todos/{id}/items":
+    post:
+      summary: Create a new item
+      tags:
+      - Items
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: item
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+          required:
+          - name
+      responses:
+        '200':
+          description: Item was added.
+  "/todos/{todoId}/items/{itemId}":
+    put:
+      summary: Update Item
+      tags:
+      - Items
+      parameters:
+      - name: todoId
+        in: path
+        required: true
+        type: string
+      - name: itemId
+        in: path
+        required: true
+        type: string
+      - name: item
+        in: body
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+          required:
+          - name
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      responses:
+        '204':
+          description: Item was updated.
+    delete:
+      summary: Delete Item
+      tags:
+      - Items
+      parameters:
+      - name: todoId
+        in: path
+        required: true
+        type: string
+      - name: itemId
+        in: path
+        required: true
+        type: string
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      responses:
+        '204':
+          description: Item was Deleted.
+  "/todos":
+    get:
+      summary: Get all your todos with their items.
+      tags:
+      - Todos
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      responses:
+        '200':
+          description: Receive your todos
+    post:
+      summary: Create a new todo.
+      tags:
+      - Todos
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      - name: todo
+        in: body
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+          required:
+          - title
+      responses:
+        '200':
+          description: Create a new todo.
+  "/todos/{id}":
+    put:
+      summary: Change an existing todo.
+      tags:
+      - Todos
+      parameters:
+      - name: id
+        in: path
+        type: string
+        required: true
+      - name: title
+        in: body
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+          required:
+          - title
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      responses:
+        '204':
+          description: Todo was updated successfully.
+    delete:
+      summary: Delete a  todo.
+      tags:
+      - Todos
+      parameters:
+      - name: id
+        in: path
+        type: string
+        required: true
+      - name: Authorization
+        in: header
+        required: true
+        type: string
+      responses:
+        '204':
+          description: Todo was deleted.
+  "/signup":
+    post:
+      summary: Create a new User
+      tags:
+      - Authentication
+      parameters:
+      - name: user
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            password:
+              type: string
+            password_confirmation:
+              type: string
+          required:
+          - name
+          - email
+          - password
+          - password_confirmation
+      responses:
+        '201':
+          description: User was successfully created and an Auth key was received.
+        '422':
+          description: 'Validation failed: Password can''t be blank, Password digest
+            can''t be blank'
+  "/auth/login":
+    post:
+      summary: Sign in and receive your Auth key
+      tags:
+      - Authentication
+      parameters:
+      - name: user
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+            password:
+              type: string
+            required:
+            - email
+            - password
+      responses:
+        '200':
+          description: Sign in was successful. Get your Auth key.
+        '401':
+          description: Invalid credentials.
+servers:
+- url: https://railstodoapi.herokuapp.com
